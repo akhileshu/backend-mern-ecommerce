@@ -21,8 +21,12 @@ exports.fetchAllProducts = async (req, res) => {
   // filter = {"category":["smartphone","laptops"]}
   // sort = {_sort:"price",_order="desc"}
   // pagination = {_page:1,_limit=10}
-  let query = Product.find({});
-  let totalProductsQuery = Product.find({});
+  let condition={}
+  if(!req.query.admin){
+    condition.deleted={$ne:true}
+  }
+  let query = Product.find(condition);
+  let totalProductsQuery = Product.find({deleted:{$ne:true}});
   // since we cant use single query for fetching products as well as totalDocs count
 
   // order is important
@@ -64,7 +68,7 @@ exports.fetchAllProducts = async (req, res) => {
 
 // Controller function to get a specific user by ID
 exports.fetchProductById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params;// Extracting Id from route parameter
   try {
     const product = await Product.findById(id);
     if (!product) {
@@ -78,7 +82,7 @@ exports.fetchProductById = async (req, res) => {
 
 // Controller function to update a user
 exports.updateProduct = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params;// Extracting Id from route parameter
 
   try {
     const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
@@ -94,14 +98,14 @@ exports.updateProduct = async (req, res) => {
 };
 
 // Controller function to delete a user
-exports.deleteUser = async (req, res) => {
-  try {
-    const deletedUser = await Users.findByIdAndDelete(req.params.id);
-    if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json({ message: "User deleted" });
-  } catch (error) {
-    res.status(500).json({ error: "Error deleting user" });
-  }
-};
+// exports.deleteUser = async (req, res) => {
+//   try {
+//     const deletedUser = await Users.findByIdAndDelete(req.params.id);
+//     if (!deletedUser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     res.status(200).json({ message: "User deleted" });
+//   } catch (error) {
+//     res.status(500).json({ error: "Error deleting user" });
+//   }
+// };
