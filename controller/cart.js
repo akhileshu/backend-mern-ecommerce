@@ -1,21 +1,5 @@
 const { Cart } = require("../model/Cart");
 
-// exports.fetchCartByUser = async (req, res) => {
-//     // if want to access userid form route parameter
-//     // url ->http://localhost:8080/cart/64da3ccd004bf8af265c3811
-//     // /cart is already added in base path
-
-// router.post("/", addToCart).get("/:userId", fetchCartByUser);
-//     const { userId } = req.params; // Extracting userId from route parameter
-//     try {
-//         // populate -> fetch all info of product and user
-//         const cartItems = await Cart.find({ user: userId }).populate('user').populate('product');
-//         res.status(200).json(cartItems);
-//     } catch (error) {
-//         res.status(400).json({ error: 'Error fetching cart by user id' });
-//     }
-// };
-
 exports.fetchCartByUser = async (req, res) => {
   // url ->http://localhost:8080/cart/?user=64da3ccd004bf8af265c3811
   const { user } = req.query; // Extracting userId from query object

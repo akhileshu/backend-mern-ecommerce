@@ -1,7 +1,7 @@
 const { query } = require("express");
 const Product = require("../model/product"); // Import your Products model
 
-// Controller function to create a new user
+// Controller function to create a new Product
 exports.createProduct = async (req, res) => {
   try {
     const doc = new Product(req.body);
@@ -14,9 +14,9 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// Controller function to get all users
+// Controller function to get all Products
 exports.fetchAllProducts = async (req, res) => {
-  // we can access them using params key value
+  // we can access them using query sting { key value}
   // here we need all query strings
   // filter = {"category":["smartphone","laptops"]}
   // sort = {_sort:"price",_order="desc"}
@@ -59,14 +59,14 @@ exports.fetchAllProducts = async (req, res) => {
   try {
     const docs = await query.exec();
     // send totalDocs in header
-    res.set("X-Total-Count", totalDocs);
+    res.set("X-Total-Count", totalDocs);// middleware -> we need to specify this in cors
     res.status(200).json(docs);
   } catch (error) {
     res.status(400).json({ error: "Error fetching all products" });
   }
 };
 
-// Controller function to get a specific user by ID
+// Controller function to get a specific Product by ID
 exports.fetchProductById = async (req, res) => {
   const { id } = req.params;// Extracting Id from route parameter
   try {
@@ -80,7 +80,7 @@ exports.fetchProductById = async (req, res) => {
   }
 };
 
-// Controller function to update a user
+// Controller function to update a Product
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;// Extracting Id from route parameter
 
@@ -97,15 +97,4 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// Controller function to delete a user
-// exports.deleteUser = async (req, res) => {
-//   try {
-//     const deletedUser = await Users.findByIdAndDelete(req.params.id);
-//     if (!deletedUser) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-//     res.status(200).json({ message: "User deleted" });
-//   } catch (error) {
-//     res.status(500).json({ error: "Error deleting user" });
-//   }
-// };
+

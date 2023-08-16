@@ -3,61 +3,15 @@
 // {
 //     "items": [
 //       {
-//         "title": "Samsung Universe 9",
-//         "description": "Samsung's new variant which goes beyond Galaxy to the Universe",
-//         "price": 1249,
-//         "discountPercentage": 15.46,
-//         "rating": 4.09,
-//         "stock": 36,
-//         "brand": "Samsung",
-//         "category": "smartphones",
-//         "thumbnail": "https://i.dummyjson.com/data/products/3/thumbnail.jpg",
-//         "images": [
-//           "https://i.dummyjson.com/data/products/3/1.jpg"
-//         ],
-//         "quantity": 2,
-//         "user": 7,
-//         "id": 4
+//        // objects of all products  
 //       }
 //     ],
 //     "totalAmount": 2498,
 //     "totalItems": 2,
-//     "user": {
-//       "email": "demo@gmail.com",
-//       "password": "Tx_ic#vKrLkSKx5",
-//       "addresses": [
-//         {
-//           "name": "d",
-//           "email": "d",
-//           "phone": "d",
-//           "street": "d",
-//           "city": "d",
-//           "state": "d",
-//           "pinCode": "d"
-//         },
-//         {
-//           "name": "akhilesh updahyay",
-//           "email": "umapati4381@gmail.com",
-//           "phone": "6281102171",
-//           "street": "ring basti",
-//           "city": "hyderabad",
-//           "state": "telangana",
-//           "pinCode": "500037"
-//         }
-//       ],
-//       "id": 7
-//     },
+//     user: {},type: Schema.Types.ObjectId,
 //     "paymentMethod": "card",
-//     "selectedAddress": {
-//       "name": "akhilesh updahyay",
-//       "email": "umapati4381@gmail.com",
-//       "phone": "6281102171",
-//       "street": "ring basti",
-//       "city": "hyderabad",
-//       "state": "telangana",
-//       "pinCode": "500037"
-//     },
-//     "id": 1
+//     "selectedAddress": {},
+//     id: "64db1ce3298a3b4d9ca49367",
 //   }
 
 // ex :order = {

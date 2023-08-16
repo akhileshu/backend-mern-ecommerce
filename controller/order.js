@@ -48,11 +48,11 @@ exports.fetchOrdersByUser = async (req, res) => {
   exports.fetchAllOrders = async (req, res) => {
     // sort = {_sort:"price",_order="desc"}
     // pagination = {_page:1,_limit=10}
-    // url->(`${url}/orders?${queryString}`)
+    // url->(http://localhost:8080/orders?_sort=id&_order=asc&_page=1&_limit=10&)
     let query = Order.find({deleted:{$ne:true}});
     let totalOrdersQuery = Order.find({deleted:{$ne:true}});
   
-    
+    // sorting by order id is not working becuase id is not a number
     if (req.query._sort && req.query._order) {
       query = query.sort({ [req.query._sort]: req.query._order });
     }
@@ -68,7 +68,7 @@ exports.fetchOrdersByUser = async (req, res) => {
   
     try {
       const docs = await query.exec();
-      res.set('X-Total-Count', totalDocs);
+      res.set('X-Total-Count', totalDocs);// middleware -> we need to specify this in cors
       res.status(200).json(docs);
     } catch (err) {
       res.status(400).json(err);
