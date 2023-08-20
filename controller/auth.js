@@ -2,7 +2,7 @@ const { User } = require("../model/User");
 const crypto = require("crypto");
 const { sanitizeUser } = require("../services/common");
 const SECRET_KEY = "SECRET_KEY";
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
   try {
@@ -23,8 +23,8 @@ exports.createUser = async (req, res) => {
           if (err) {
             res.status(400).json(err);
           } else {
-            // const token = jwt.sign(sanitizeUser(doc), SECRET_KEY);
-            res.status(201).json(sanitizeUser(doc));
+            const token = jwt.sign(sanitizeUser(doc), SECRET_KEY);
+            res.status(201).json(token);
           }
         });
       }
@@ -36,7 +36,7 @@ exports.createUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
   // console.log(JSON.stringify(req.body, null, 2));{
-  //   "username": "fgjs@gmail.com",
+  //   "email": "fgjs@gmail.com",
   //   "password": "Pasdsdfsds@123"
   // }
   // gives sanatized user obj or //Unauthorized
