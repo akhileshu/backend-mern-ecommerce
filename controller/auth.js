@@ -1,28 +1,49 @@
 const { User } = require("../model/User");
+const crypto = require("crypto");
+const { sanitizeUser } = require("../services/common");
+const SECRET_KEY = "SECRET_KEY";
+// const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
   try {
-    const user = new User(req.body);
-    const doc = await user.save();
-    // console.log(doc)
-    res.status(201).json({id:doc.id,role:doc.role});
-  } catch (error) {
-    res.status(400).json({ error: "Error creating user" });
-    // console.log(error)
+    // console.log(req.body)//{ email: 'fgjs@gmail.com', password: 'Pasdsdfsds@123' }
+    const salt = crypto.randomBytes(16);
+    crypto.pbkdf2(
+      req.body.password,
+      salt,
+      310000,
+      32,
+      "sha256",
+      async function (err, hashedPassword) {
+        const user = new User({ ...req.body, password: hashedPassword, salt });
+        const doc = await user.save();
+
+        req.login(sanitizeUser(doc), (err) => {
+          // this also calls serializer and adds to session
+          if (err) {
+            res.status(400).json(err);
+          } else {
+            // const token = jwt.sign(sanitizeUser(doc), SECRET_KEY);
+            res.status(201).json(sanitizeUser(doc));
+          }
+        });
+      }
+    );
+  } catch (err) {
+    res.status(400).json(err);
   }
 };
+
 exports.loginUser = async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user)  res.status(401).json({ message: "invalid credentials" });
-    else if (user.password === req.body.password) {
-      // send only these 3 fields
-       res
-        .status(200)
-        .json({id:user.id,role:user.role});
-    } else  res.status(401).json({ message: "invalid credentials" });
-  } catch (error) {
-     res.status(400).json({ error: "Error login User" });
-    // console.log(error)
-  }
+  // console.log(JSON.stringify(req.body, null, 2));{
+  //   "username": "fgjs@gmail.com",
+  //   "password": "Pasdsdfsds@123"
+  // }
+  // gives sanatized user obj or //Unauthorized
+
+  res.json(req.user); //our session is stored in req.user in passport js authintication
+};
+
+exports.checkUser = async (req, res) => {
+  res.json({ status: "success", user: req.user });
 };
