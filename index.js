@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 // auth
+const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
@@ -22,17 +23,18 @@ const cartRouter = require("./routes/cart");
 const orderRouter = require("./routes/order");
 
 const cors = require("cors");
-const { sanitizeUser, isAuth } = require("./services/common");
+const { sanitizeUser, isAuth, cookieExtractor } = require("./services/common");
 
 const server = express();
 
 const SECRET_KEY = "SECRET_KEY";
 // JWT options
 const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = SECRET_KEY; // TODO: should not be in code;
 
 // Set up session middleware
+server.use(cookieParser());
 server.use(
   session({
     secret: "keyboard cat", // Secret key for session encryption
@@ -67,7 +69,7 @@ server.use("/orders", isAuth(), orderRouter);
 passport.use(
   "local",
   new LocalStrategy({ usernameField: "email" }, async function (
-    email,//by default passport uses 'username'
+    email, //by default passport uses 'username'
     password,
     done
   ) {
@@ -105,7 +107,7 @@ passport.use(
   new JwtStrategy(opts, async function (jwt_payload, done) {
     console.log({ jwt_payload });
     try {
-      const user = await User.findOne({ id: jwt_payload.sub });
+      const user = await User.findById(jwt_payload.id);
       if (user) {
         return done(null, sanitizeUser(user)); // this calls serializer
       } else {
