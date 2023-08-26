@@ -1,5 +1,5 @@
 const express = require("express");
-const { createUser, loginUser, checkUser } = require("../controller/auth");
+const { createUser, loginUser, checkAuth } = require("../controller/auth");
 const passport = require("passport");
 const router = express.Router();
 
@@ -7,6 +7,6 @@ const router = express.Router();
 router
   .post("/signup", createUser)
   .post("/login", passport.authenticate("local"), loginUser)
-  .post("/check", passport.authenticate("jwt"), checkUser);
+  .get("/check", passport.authenticate("jwt"), checkAuth);
 
 module.exports = router;

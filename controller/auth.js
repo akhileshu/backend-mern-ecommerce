@@ -30,7 +30,7 @@ exports.createUser = async (req, res) => {
                 httpOnly: true,
               })
               .status(201)
-              .json(token);
+              .json(sanitizeUser(doc));
           }
         });
       }
@@ -50,6 +50,7 @@ exports.loginUser = async (req, res) => {
   res.json(req.user); //our session is stored in req.user in passport js authintication
 };
 
-exports.checkUser = async (req, res) => {
-  res.json({ status: "success", user: req.user });
+exports.checkAuth = async (req, res) => {
+  if(req.user)res.json(req.user)
+  else res.sendStatus(401);
 };

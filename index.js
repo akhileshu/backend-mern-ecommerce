@@ -94,7 +94,7 @@ passport.use(
           }
           const token = jwt.sign(sanitizeUser(user), SECRET_KEY);
           // Authentication successful, pass the sanitizeUser(user)/token to serializer
-          done(null, token);
+          done(null, sanitizeUser(user));
         }
       );
     } catch (err) {
@@ -132,6 +132,34 @@ passport.deserializeUser(function (user, cb) {
   process.nextTick(function () {
     // Retrieve user's ID and role from the session
     return cb(null, user);
+  });
+});
+
+// stripe
+// This is your  secret API key.
+const stripe = require("stripe")(
+  "sk_test_51Nj9kNSEu4xIuLPsnw2W76BqP1ImtNhc7BDBzKBAubyUKdxihMbzHIYkCxEt8m0dXXDcqnE2CtyktKVhndImBQ8000w03D8OP9"
+);
+
+const calculateOrderAmount = (items) => {
+  return 1400;
+};
+
+server.post("/create-payment-intent", async (req, res) => {
+  const { totalAmount } = req.body;
+
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalAmount*100,//*for decimal compensate
+    currency: "inr",
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.send({
+    clientSecret: paymentIntent.client_secret,
   });
 });
 
